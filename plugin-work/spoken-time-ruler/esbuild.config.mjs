@@ -39,7 +39,7 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "main.js",
+	outfile: "../../.obsidian/plugins/spoken-time-ruler/main.js",
 	minify: prod,
 });
 
