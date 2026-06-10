@@ -1,0 +1,10 @@
+{
+	"id": "spoken-time-ruler",
+	"name": "Spoken Time Ruler",
+	"version": "0.1.0",
+	"minAppVersion": "1.5.0",
+	"description": "Shows a simple editor gutter ruler for estimated spoken time through the current note.",
+	"author": "Local",
+	"authorUrl": "",
+	"isDesktopOnly": false
+}

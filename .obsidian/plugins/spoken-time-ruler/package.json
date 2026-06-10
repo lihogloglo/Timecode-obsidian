@@ -1,0 +1,26 @@
+{
+	"name": "spoken-time-ruler",
+	"version": "0.1.0",
+	"description": "Obsidian plugin that shows estimated spoken-time ticks in the editor gutter.",
+	"main": "main.js",
+	"scripts": {
+		"dev": "node esbuild.config.mjs --watch",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+	},
+	"keywords": [
+		"obsidian",
+		"spoken-time",
+		"reading-time"
+	],
+	"author": "Local",
+	"license": "MIT",
+	"devDependencies": {
+		"@codemirror/state": "6.5.0",
+		"@codemirror/view": "6.38.6",
+		"@types/node": "^20.14.14",
+		"builtin-modules": "^3.3.0",
+		"esbuild": "^0.23.0",
+		"obsidian": "1.13.1",
+		"typescript": "^5.5.4"
+	}
+}
