@@ -8,7 +8,7 @@ import {
 	debounce,
 } from "obsidian";
 import type { Extension, Text } from "@codemirror/state";
-import { EditorView, GutterMarker, gutter } from "@codemirror/view";
+import { EditorView, GutterMarker, gutter, type ViewUpdate } from "@codemirror/view";
 
 interface SpokenTimeRulerSettings {
 	enabled: boolean;
@@ -206,6 +206,9 @@ function createSpokenTimeRulerExtension(plugin: SpokenTimeRulerPlugin): Extensio
 				const lineNumber = view.state.doc.lineAt(line.from).number;
 				const tick = getMarkerMap(view.state.doc, plugin.options).get(lineNumber);
 				return tick ? new SpokenTimeTickMarker(tick) : null;
+			},
+			lineMarkerChange(update: ViewUpdate) {
+				return update.docChanged;
 			},
 			initialSpacer() {
 				return new SpokenTimeTickMarker({
