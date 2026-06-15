@@ -1,22 +1,18 @@
 # Spoken Time Ruler
 
-Development workspace for the local Obsidian plugin.
+Obsidian plugin that adds estimated spoken-time ticks to the editor gutter and shows the current note's spoken duration in the status bar.
 
-The actual plugin installed in the vault is:
-
-```text
-../../.obsidian/plugins/spoken-time-ruler/
-  manifest.json
-  main.js
-  styles.css
-```
-
-Build after editing `main.ts`:
+## Development
 
 ```bash
+npm install
 npm run build
 ```
 
-That writes the compiled plugin to `../../.obsidian/plugins/spoken-time-ruler/main.js`.
+The build creates `main.js` next to `manifest.json` and `styles.css`. To install manually, copy those three files into:
 
-The first version attaches ticks to Markdown source lines. If a paragraph is one very long wrapped line, the tick is attached to that source line rather than the exact visual wrap row.
+```text
+<your-vault>/.obsidian/plugins/spoken-time-ruler/
+```
+
+Ticks attach to Markdown source lines, so one very long wrapped paragraph gets a tick on its source line rather than an exact visual wrap row.

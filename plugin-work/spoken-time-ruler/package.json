@@ -12,7 +12,7 @@
 		"spoken-time",
 		"reading-time"
 	],
-	"author": "Local",
+	"author": "lihogloglo",
 	"license": "MIT",
 	"devDependencies": {
 		"@codemirror/state": "6.5.0",

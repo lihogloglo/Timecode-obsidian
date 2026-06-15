@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+main.js
+*.map
+dist/
+build/
+
+# Local Obsidian vault state
+.obsidian/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -345,7 +345,7 @@ function countWords(text: string): number {
 		.replace(/https?:\/\/\S+/g, " ")
 		.replace(/[#>*_\-~=[\]()`{}|]/g, " ");
 
-	return cleaned.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)?.length ?? 0;
+	return cleaned.match(/[\p{L}\p{N}]+(?:['\u2019][\p{L}\p{N}]+)*/gu)?.length ?? 0;
 }
 
 function wordsToSeconds(words: number, wordsPerMinute: number): number {
