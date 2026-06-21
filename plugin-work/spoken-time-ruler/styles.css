@@ -54,3 +54,24 @@
 .spoken-time-ruler-tick:not(.has-label) .spoken-time-ruler-label {
 	display: none;
 }
+
+.spoken-time-ruler-status {
+	cursor: pointer;
+	border-radius: 4px;
+	padding-inline: 6px;
+}
+
+.spoken-time-ruler-status:hover,
+.spoken-time-ruler-status:focus-visible {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.spoken-time-ruler-status:focus-visible {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 2px;
+}
+
+.spoken-time-ruler-status:not(.is-active) {
+	color: var(--text-faint);
+}

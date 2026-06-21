@@ -93,6 +93,20 @@ export default class SpokenTimeRulerPlugin extends Plugin {
 
 		this.statusBarItem = this.addStatusBarItem();
 		this.statusBarItem.addClass("spoken-time-ruler-status");
+		this.statusBarItem.addClass("is-clickable");
+		this.statusBarItem.setAttribute("role", "button");
+		this.statusBarItem.tabIndex = 0;
+		this.registerDomEvent(this.statusBarItem, "click", () => {
+			void this.toggleRuler();
+		});
+		this.registerDomEvent(this.statusBarItem, "keydown", (event) => {
+			if (event.key !== "Enter" && event.key !== " ") {
+				return;
+			}
+
+			event.preventDefault();
+			void this.toggleRuler();
+		});
 
 		this.rebuildEditorExtensions();
 		this.registerEditorExtension(this.editorExtensions);
@@ -101,11 +115,7 @@ export default class SpokenTimeRulerPlugin extends Plugin {
 			id: "toggle-spoken-time-ruler",
 			name: "Toggle spoken time ruler",
 			callback: async () => {
-				this.options.enabled = !this.options.enabled;
-				await this.saveSettings();
-				this.rebuildEditorExtensions();
-				this.refreshStatusBar();
-				new Notice(`Spoken Time Ruler ${this.options.enabled ? "enabled" : "disabled"}`);
+				await this.toggleRuler();
 			},
 		});
 
@@ -148,6 +158,26 @@ export default class SpokenTimeRulerPlugin extends Plugin {
 		await this.saveData(this.options);
 	}
 
+	async toggleRuler(): Promise<void> {
+		await this.setRulerEnabled(!this.options.enabled);
+	}
+
+	async setRulerEnabled(enabled: boolean, showNotice = true): Promise<void> {
+		if (this.options.enabled === enabled) {
+			this.refreshStatusBar();
+			return;
+		}
+
+		this.options.enabled = enabled;
+		await this.saveSettings();
+		this.rebuildEditorExtensions();
+		this.refreshStatusBar();
+
+		if (showNotice) {
+			new Notice(`Spoken Time Ruler ${this.options.enabled ? "enabled" : "disabled"}`);
+		}
+	}
+
 	rebuildEditorExtensions(): void {
 		this.editorExtensions.length = 0;
 
@@ -158,14 +188,8 @@ export default class SpokenTimeRulerPlugin extends Plugin {
 		this.app.workspace.updateOptions();
 	}
 
-	private refreshStatusBar(): void {
+	refreshStatusBar(): void {
 		if (!this.statusBarItem) {
-			return;
-		}
-
-		if (!this.options.enabled) {
-			this.statusBarItem.empty();
-			this.statusBarItem.hide();
 			return;
 		}
 
@@ -188,8 +212,12 @@ export default class SpokenTimeRulerPlugin extends Plugin {
 
 		const words = countWordsInText(text, this.options.ignoreCodeBlocks);
 		const seconds = wordsToSeconds(words, this.options.wordsPerMinute);
+		const action = this.options.enabled ? "Hide spoken time ruler" : "Show spoken time ruler";
 		this.statusBarItem.setText(`${formatTime(seconds)} spoken`);
-		this.statusBarItem.title = `${words} words at ${this.options.wordsPerMinute} WPM`;
+		this.statusBarItem.title = `${words} words at ${this.options.wordsPerMinute} WPM. ${action}.`;
+		this.statusBarItem.setAttribute("aria-label", `${formatTime(seconds)} spoken. ${action}.`);
+		this.statusBarItem.setAttribute("aria-pressed", String(this.options.enabled));
+		this.statusBarItem.classList.toggle("is-active", this.options.enabled);
 		this.statusBarItem.show();
 	}
 }
@@ -387,9 +415,7 @@ class SpokenTimeRulerSettingTab extends PluginSettingTab {
 			.setDesc("Adds estimated spoken-time ticks to the editor gutter.")
 			.addToggle((toggle) =>
 				toggle.setValue(this.plugin.options.enabled).onChange(async (value) => {
-					this.plugin.options.enabled = value;
-					await this.plugin.saveSettings();
-					this.plugin.rebuildEditorExtensions();
+					await this.plugin.setRulerEnabled(value, false);
 					this.display();
 				})
 			);
@@ -406,6 +432,7 @@ class SpokenTimeRulerSettingTab extends PluginSettingTab {
 						this.plugin.options.wordsPerMinute = value;
 						await this.plugin.saveSettings();
 						this.plugin.rebuildEditorExtensions();
+						this.plugin.refreshStatusBar();
 					})
 			);
 
@@ -474,6 +501,7 @@ class SpokenTimeRulerSettingTab extends PluginSettingTab {
 					this.plugin.options.ignoreCodeBlocks = value;
 					await this.plugin.saveSettings();
 					this.plugin.rebuildEditorExtensions();
+					this.plugin.refreshStatusBar();
 				})
 			);
 	}
